@@ -8,7 +8,7 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
 
   const checkSubscribe = () => {
     // console.log(subscribers[0] === context.userId)
-    if (subscribers !== null && subscribers != undefined) {
+    if (subscribers !== null && subscribers !== undefined) {
       for (let val of subscribers) {
         if (userId === val) {
           return true
@@ -21,15 +21,10 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
   const [isSubscribe, setisSubscribe] = useState(null)
 
   if (isSubscribe === null) {
-    console.log(checkSubscribe())
     setisSubscribe(checkSubscribe())
   }
 
-  useEffect(() => {
-    console.log(isSubscribe)
-  },[isSubscribe])
-
-  const {loading, request, error, clearError} = useHttp()
+  const {loading, request} = useHttp()
   
   const subscribeHadler = async () => {
     const data = await request('/api/book/subscribe', 'POST', {isSubscribe, bookId, userId})

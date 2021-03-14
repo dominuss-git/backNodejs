@@ -69,6 +69,7 @@ router.post('/subscribe', async (req, res) => {
 
 router.post('/unsubscribe', async (req, res) => {
   try {
+    console.log(req.body)
     const {isSubscribe, bookId, userId}  = req.body
     const user = await User.findById(userId)
     const book = await Book.findById(bookId)

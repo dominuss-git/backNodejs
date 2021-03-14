@@ -9,6 +9,7 @@ app.use(express.json({extended: true}))
 app.use('/api/auth', require('./rotes/auth.routes'))
 app.use('/api/book', require('./rotes/search.routes'))
 app.use('/api/book', require('./rotes/changeBook.routes'))
+app.use('/api/usr', require('./rotes/getUser.routes'))
 
 const PORT = config.get('port') || 3030
 

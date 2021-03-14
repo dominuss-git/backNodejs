@@ -19,7 +19,7 @@ export const Navbar = () => {
         <a href="/" className="brand-logo">OwnLibrary</a>
         <ul id="nav-mobile" className="right hide-on-med-and-down">
           <li><NavLink to="/search">Search</NavLink></li>
-          <li><NavLink to="/account/">Account</NavLink></li>
+          <li><NavLink to="/account">Account</NavLink></li>
           <li><NavLink to="/create">Create</NavLink></li>
           <li><a to="/" onClick={logoutHandler}>Logout</a></li>
         </ul>

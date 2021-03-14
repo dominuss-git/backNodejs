@@ -16,7 +16,7 @@ export const useRoutes = isAuthentification => {
         <Route path="/search" exact>
           <SearchPage />
         </Route>
-        <Route path="/account/">
+        <Route path="/account">
           <AcountPage />
         </Route>
         <Redirect to="/search" />

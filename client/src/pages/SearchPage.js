@@ -48,7 +48,6 @@ export const SearchPage = () => {
   }
 
   const switchPage = val => {
-    console.log(val)
     setPage(Number(val.target.innerHTML))
   }
 
@@ -57,7 +56,7 @@ export const SearchPage = () => {
       setStatus(true)
       searchHandler()
     }
-  },[books])
+  },[books, status, searchHandler])
 
   return (
     <div className="wrapper">

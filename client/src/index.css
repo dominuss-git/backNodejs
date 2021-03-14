@@ -51,10 +51,32 @@ input.yellow-input:focus {
 }
 
 .book__card {
+  display: flex;
+  flex-direction: row;
   padding: 0 0 20px 20px;
   color: white;
   display: none;
   visibility: hidden;
+}
+
+.book__wrapper {
+  display: flex;
+  flex-direction: row;
+  padding: 0 0 20px 20px;
+  color: white;
+  display: none;
+  visibility: hidden;
+}
+
+.card__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+}
+
+.book__btn {
+  align-self: flex-end;
 }
 
 .book:hover {
@@ -63,9 +85,21 @@ input.yellow-input:focus {
   visibility: visible;
 }
 
-.book:hover + .book__card {
+.book__wrapper:hover {
+  cursor: pointer;
+  display: flex;
+  visibility: visible;
+}
+
+.book:hover + .book__card{
   cursor: pointer;
   display: block;
+  visibility: visible;
+}
+
+.book:hover + .book__wrapper{
+  cursor: pointer;
+  display: flex;
   visibility: visible;
 }
 
@@ -82,6 +116,21 @@ input.yellow-input:focus {
 
 .pages__space {
   margin: 0 5px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  color: white;
+}
+
+.box__title {
+  font-size: 18px;
+}
+
+.box__value {
+  font-size: 14px;
 }
 
 @media(max-width: 1400px) {
