@@ -1,0 +1,104 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+input.yellow-input {
+  border-bottom: 1px solid #fff!important;
+  box-shadow:  0 1px 0 0 #fff!important;
+}
+
+input.yellow-input + label {
+  color: #fff!important
+}
+
+input.yellow-input:focus + label {
+  color: #ffeb3d!important
+}
+
+input.yellow-input:focus {
+  border-bottom: 1px solid #ffeb3d!important;
+  box-shadow: 0 1px 0 0 #ffeb3d!important;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  /* max-width: 70%; */
+}
+
+.wrapper__search {
+  position: relative;
+  margin: 120px 0 0 -200px;
+  width: 300px !important;
+  height: 400px;
+}
+
+.wrapper__card {
+  margin: 112px 20px;
+  max-width: 50% !important;
+  align-self: flex-end !important;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.book {
+  font-size: 20px;
+  padding: 7px 0;
+  text-align: center;
+  color: white;
+}
+
+.book__card {
+  padding: 0 0 20px 20px;
+  color: white;
+  display: none;
+  visibility: hidden;
+}
+
+.book:hover {
+  cursor: pointer;
+  display: block;
+  visibility: visible;
+}
+
+.book:hover + .book__card {
+  cursor: pointer;
+  display: block;
+  visibility: visible;
+}
+
+.book__card:hover {
+  cursor: pointer;
+  display: block;
+  visibility: visible;
+}
+
+.pages {
+  display: flex;
+  justify-content: center;
+}
+
+.pages__space {
+  margin: 0 5px;
+}
+
+@media(max-width: 1400px) {
+  .wrapper {
+    flex-direction:column
+  }
+  .wrapper__search {
+    position: inherit;
+    align-self: center;
+    margin: 40px 0;
+    width: 300px !important;
+    height: 400px;
+  }
+  .wrapper__card {
+    /* font-size: 10px; */
+    margin: 0;
+    max-width: 95% !important;
+    align-self: center !important;
+  }
+}

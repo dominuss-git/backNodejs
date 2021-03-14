@@ -1,0 +1,5 @@
+{
+  "port" : 5000,
+  "jwtSecret" : "very secret string", 
+  "mongodb" : "mongodb+srv://dominuss_:k1i2r3i4l5l6@cluster0.xgdgc.mongodb.net/library"
+}
