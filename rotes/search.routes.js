@@ -30,7 +30,7 @@ router.post('/get', async (req, res) => {
 
     const book = await Book.findById(bookId)
 
-    res.status(200).json({name : book.name, genre: book.genre, authors: book.genre})
+    res.status(200).json({name : book.name, genre: book.genre, authors: book.authors})
   } catch(e) {
     res.status(500).json({ message : "error"})
   }

@@ -52,7 +52,16 @@ export const Book = ({bookId, userId}) => {
               <b>Genre</b> : {book.genre}
             </div>
             <div className="">
-              <b>Authors</b> : {book.genre}
+              <b>Authors</b> : 
+                <ul>
+                  {
+                    book.authors.map((val, i) => {
+                      return (
+                        <li key={i}>{val}</li>
+                      )
+                    })
+                  }
+                </ul>
             </div>
           </div>
           {

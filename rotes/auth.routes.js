@@ -85,8 +85,6 @@ router.post(
         return res.status(400).json({ message: "wrong password, try again"})
       }
 
-      console.log(user.id)
-
       const token = jwt.sign(
         {
           userId: user.id,
