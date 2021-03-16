@@ -1,4 +1,4 @@
-const {Schema, model, Types} = require('mongoose')
+const {Schema, model, ObjectId} = require('mongoose')
 
 const schema = new Schema({
   name : {
@@ -10,7 +10,7 @@ const schema = new Schema({
     required: true
   },
   adress : {
-    type: String,
+    type: ObjectId,
     required: true
   },
   email : {
@@ -22,8 +22,8 @@ const schema = new Schema({
     type: String,
     required: true
   },
-  books: [{
-    type: String
+  books: [{ 
+    type: ObjectId
   }]
 })
 

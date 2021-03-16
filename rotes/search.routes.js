@@ -16,7 +16,6 @@ router.post('/search', async (req, res) => {
     const books = await Book.find(querySelection, (docs, err) => {
 
     })
-
     res.status(201).json({ books })
 
   } catch(e) {

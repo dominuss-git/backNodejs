@@ -13,6 +13,16 @@ input.yellow-input:focus + label {
   color: #ffeb3d!important
 }
 
+.registr__wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.small {
+  width: 50px;
+}
+
 input.yellow-input:focus {
   border-bottom: 1px solid #ffeb3d!important;
   box-shadow: 0 1px 0 0 #ffeb3d!important;

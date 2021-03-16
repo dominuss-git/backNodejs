@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose')
+const {Schema, model, ObjectId} = require('mongoose')
 
 const schema = new Schema({
   name : {
@@ -14,10 +14,14 @@ const schema = new Schema({
     required: true,
   }],
   subscribers: [{
-    type: String
+    type: ObjectId
   }],
   data: {
-    type: String,
+    type: Date,
+    required: true
+  },
+  count: {
+    type: Number,
     required: true
   }
 })

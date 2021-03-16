@@ -5,6 +5,7 @@ import {useMessage} from '../hooks/message.hook'
 function Book({name, authors, genre, data, bookId, userId, subscribers}) {
   const message = useMessage()
   const [isDeleted, setisDeleted] = useState(false)
+  const [isActive, setIsActive] = useState(true)
 
   const checkSubscribe = () => {
     // console.log(subscribers[0] === context.userId)
@@ -28,7 +29,8 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
   
   const subscribeHadler = async () => {
     const data = await request('/api/book/subscribe', 'POST', {isSubscribe, bookId, userId})
-    setisSubscribe(true)
+    setIsActive(data.isActive)
+    setisSubscribe(data.isActive)
     message(data.message)
   }
   const unsubscribeHadler = async () => {
@@ -60,19 +62,13 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
               )  
             })}
           </ul>
-          <ul> <b>Release data</b> : {data}
+          <ul> <b>Release data</b> : {new Date(data).getDate()}-{new Date(data).getMonth() + 1}-{new Date(data).getFullYear()}
           </ul>
-          <button 
-            onClick={deleteHandler}
-            disabled={loading}
-            className="btn">
-            DELETE
-          </button>
-            &nbsp;
           {isSubscribe ? 
             <button 
               className="btn"
               disabled={loading}
+              disabled={!isActive}
               onClick={unsubscribeHadler}>
               Unsubscribe
             </button> :  
@@ -83,6 +79,13 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
               Subscribe
             </button>
           }
+          &nbsp;
+          <button 
+            onClick={deleteHandler}
+            disabled={loading}
+            className="btn red darken-4">
+            DELETE
+          </button>
         </div>
       </div>
     )

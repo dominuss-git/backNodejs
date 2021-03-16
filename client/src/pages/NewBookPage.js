@@ -10,7 +10,8 @@ export const NewBookPage = () => {
     name: '',
     genre: '',
     authors: '',
-    data: ''
+    data: '',
+    count: ''
   })
 
   useEffect(() => {
@@ -26,7 +27,6 @@ export const NewBookPage = () => {
     try {
       const data = await request('/api/book/add', 'POST', {...form})
       message(data.message)
-
     } catch(e) {}
   }
 
@@ -71,6 +71,15 @@ export const NewBookPage = () => {
                     placeholder="Release data" 
                     id="data" 
                     name="data"
+                    onChange={changeHandler}/>
+                </div>
+                <div className="input-field">
+                  <input 
+                    className="yellow-input"
+                    type="number"
+                    placeholder="Count" 
+                    id="count" 
+                    name="count"
                     onChange={changeHandler}/>
                 </div>
               </div>

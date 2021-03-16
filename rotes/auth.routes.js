@@ -2,6 +2,7 @@ const {Router} = require('express')
 const bcrypt = require('bcryptjs')
 const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
+const UserAdress = require('../models/UserAdress')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 
@@ -23,7 +24,22 @@ router.post(
       })
     }
 
-    const {name, surname, adress, email, password, confirm_password} = req.body
+    const {
+      name,
+      surname, 
+      country, 
+      city, 
+      street, 
+      home, 
+      flat, 
+      country_code, 
+      operator_code, 
+      number, 
+      email, 
+      password, 
+      confirm_password
+    } = req.body
+
     const candinate = await User.findOne({ email })
 
     if (candinate) {
@@ -34,9 +50,30 @@ router.post(
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
-    const user = new User({name, surname, adress, email, password : hashedPassword})
+
+    const adress = new UserAdress({
+      country, 
+      city, 
+      street, 
+      home : Number(home), 
+      flat : Number(flat), 
+      country_code, 
+      operator_code: Number(operator_code), 
+      number: Number(number),
+    })
+
+    await adress.save()
+    // console.log(req.body)
+    const user = new User({
+      name, 
+      surname, 
+      adress: adress._id, 
+      email, 
+      password : hashedPassword
+    })
 
     await user.save()
+    
 
     const token = jwt.sign(
       {
@@ -47,6 +84,7 @@ router.post(
         expiresIn: '1h'
       }
     )
+    // console.log(user.id)
     
     res.json({ token, userId: user.id })
 
