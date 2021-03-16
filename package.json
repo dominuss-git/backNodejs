@@ -4,15 +4,18 @@
   "description": "library",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
+    "start": "cross-env NODE_ENV=production node index",
+    "server": "nodemon index",
     "client": "npm run start --prefix client",
-    "server": "concurrently \"npm run dev\" \"npm run client\""
+    "client:install": "npm install --prefix client",
+    "client:build": "npm run build --prefix client",
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^6.0.0",
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.7"
   },
   "dependencies": {

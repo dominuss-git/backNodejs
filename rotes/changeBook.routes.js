@@ -64,14 +64,16 @@ router.post('/subscribe', async (req, res) => {
     }
 
     if (!isSubscribe) {
-      const subscribedBook = new SubscribedBook({
-        bookId : userId,
-      }) 
+    
+      const subscribedBook = await SubscribedBook({
+        bookId: bookId,
+        userId: userId
+      })
 
-      user.books[user.books.length] = bookId //subscribedBook.id
-      book.subscribers[book.subscribers.length] = userId
+      await subscribedBook.save()
 
-      // await subscribedBook.save()
+      user.books[user.books.length] = subscribedBook.id
+      book.subscribers[book.subscribers.length] = subscribedBook.id
 
 
       User.findOneAndUpdate({_id: userId}, {books : user.books}, {upset:true}, function(err, docs) {
@@ -88,7 +90,7 @@ router.post('/subscribe', async (req, res) => {
     } else {
       res.status(500).json({message : "you already subsribe", isActive: false})
     }
-    // res.status(201).json({message: "Book add"})
+
     res.status(201).json({message: "subscribed", isActive: true})
   } catch(e) {
     res.status(500).json({ message : "Error"})
@@ -98,35 +100,40 @@ router.post('/subscribe', async (req, res) => {
 router.post('/unsubscribe', async (req, res) => {
   try {
     const {isSubscribe, bookId, userId}  = req.body
-    // const subscribedBook = await SubscribedBook.findOneAndRemove({bookId: bookId}, function(err, docs) {
-    //   if (err) {
-    //     return res.json({ message: "failed unsubscribe"})
-    //   }
-    // })
-    const user = await User.findById(userId)
-    const book = await Book.findById(bookId)
-
-    // console.log(subscribedBook)
-
-    if (book === null) {
-      return res.status(201).json({message: "book is deleted"})
-    }
 
     if (isSubscribe) {
+
+      const subscribedBook = await SubscribedBook.findOne({
+        bookId: bookId,
+        userId: userId
+      }, function(err, docs) {
+        if (err) {
+          return res.json({ message: "failed unsubscribe"})
+        }
+      })
+  
+      const user = await User.findOne({books: subscribedBook.id})
+      const book = await Book.findOne({subscribers: subscribedBook.id})
+  
+      if (book === null) {
+        return res.status(201).json({message: "book is deleted"})
+      }
+
       for (let i in user.books) {
-        if (user.books[i].equals(bookId)) {
+        if (user.books[i].equals(subscribedBook.id)) {
           user.books.splice(i, 1)
           break
         }
       }
 
       for (let i in book.subscribers) {
-        console.log(book.subscribers[i].equals(userId))
-        if (book.subscribers[i].equals(userId)) {
+        if (book.subscribers[i].equals(subscribedBook.id)) {
           book.subscribers.splice(i, 1)
           break
         }
       }
+      
+      await subscribedBook.remove()
 
       User.findOneAndUpdate({_id: userId}, {books : user.books}, {upset:true}, function(err, docs) {
         if(err) {
@@ -153,43 +160,55 @@ router.post('/unsubscribe', async (req, res) => {
 router.post('/delete', async (req, res) => {
   try {
     const {bookId, userId}  = req.body
-    const user = await User.find({})
+    const book = await Book.findById(bookId)
 
-    user.map((val, j) => {
-      for (let i in val.books) {
-        if (val.books[i] === bookId) {
-          user[j].books.splice(i, 1)
+    // console.log(book)
+
+    book.subscribers.map(async (val, i) => {
+      let subscriber = await SubscribedBook.findById(val)
+      let user = await User.findById(subscriber.userId)
+
+
+      for (let i in user.books) {
+        if (String(user.books[i]) === String(val)) {
+          user.books.splice(i, 1)
           break
         }
       }
-    })
-    for (let i in user) {
-      User.findOneAndUpdate({_id: user[i]._id}, {books : user[i].books}, {upset:true}, function(err, docs) {
+
+      User.findOneAndUpdate({_id: user._id}, {books : user.books}, {upset:true}, function(err, docs) {
         if(err) {
-          res.status(500).json({message : "failed to subscribe"})
+          res.status(500).json({message : "failed to delete"})
         }
       })
-    }
 
-    Book.findByIdAndRemove(bookId, function(err, docs) {
-      if(err) {
-        return res.status(400).json({message: "failed delete"})
-      }
-      return res.status(201).json({message: "book delete"})
+      await subscriber.remove()
     })
-    
 
-      // User.findOneAndUpdate({_id: userId}, {books : user.books}, {upset:true}, function(err, docs) {
-      //   if(err) {
-      //     res.status(500).json({message : "failed to unsubscribe"})
-      //   }
+    await book.remove()
 
-      //   Book.findOneAndUpdate({_id: bookId}, {subscribers: book.subscribers}, {upsert: true}, function(err, docs) {
-      //     if(err) {
-      //       res.status(500).json({message : "failed to unsubscribe"})
-      //     }
-      //   })
-      // })
+    // user.map((val, j) => {
+    //   for (let i in val.books) {
+    //     if (val.books[i] === bookId) {
+    //       user[j].books.splice(i, 1)
+    //       break
+    //     }
+    //   }
+    // })
+    // for (let i in user) {
+    //   User.findOneAndUpdate({_id: user[i]._id}, {books : user[i].books}, {upset:true}, function(err, docs) {
+    //     if(err) {
+    //       res.status(500).json({message : "failed to subscribe"})
+    //     }
+    //   })
+    // }
+
+    // Book.findByIdAndRemove(bookId, function(err, docs) {
+    //   if(err) {
+    //     return res.status(400).json({message: "failed delete"})
+    //   }
+      return res.status(201).json({message: "book delete"})
+    // })
 
   } catch(e) {
     res.status(500).json({ message : "Error"})

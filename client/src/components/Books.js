@@ -2,17 +2,29 @@ import React, { useState, useEffect } from 'react'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from '../hooks/message.hook'
 
-function Book({name, authors, genre, data, bookId, userId, subscribers}) {
+function Book({name, 
+  authors, 
+  genre, 
+  data, 
+  bookId, 
+  user_books, 
+  userId, 
+  subscribers
+  }) {
   const message = useMessage()
   const [isDeleted, setisDeleted] = useState(false)
   const [isActive, setIsActive] = useState(true)
+  const {loading, request} = useHttp()
 
   const checkSubscribe = () => {
-    // console.log(subscribers[0] === context.userId)
+    console.log(user_books)
     if (subscribers !== null && subscribers !== undefined) {
       for (let val of subscribers) {
-        if (userId === val) {
-          return true
+        console.log(val)
+        for (let book of user_books) {
+          if (book === val) {
+            return true
+          }
         }
       }
     } 
@@ -24,8 +36,6 @@ function Book({name, authors, genre, data, bookId, userId, subscribers}) {
   if (isSubscribe === null) {
     setisSubscribe(checkSubscribe())
   }
-
-  const {loading, request} = useHttp()
   
   const subscribeHadler = async () => {
     const data = await request('/api/book/subscribe', 'POST', {isSubscribe, bookId, userId})

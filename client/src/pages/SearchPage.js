@@ -29,7 +29,8 @@ export const SearchPage = () => {
 
   const searchHandler = async () => {
     try {
-      const data = await request('/api/book/search', 'POST', {...form})
+      const data = await request('/api/book/search', 'POST', {...form, userId: context.userId})
+      console.log(data.user_books)
       if(data === null) {
         return
       } 
@@ -109,6 +110,7 @@ export const SearchPage = () => {
               return (
                 <Book 
                   subscribers={book.subscribers}
+                  user_books={books.user_books}
                   userId={context.userId}
                   bookId={book._id}
                   key={i} name={book.name} 
