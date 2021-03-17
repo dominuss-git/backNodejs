@@ -11,6 +11,8 @@ export const Book = ({bookId, userId}) => {
   const [book, setBook] = useState()
   const [isSubscribe, setisSubscribe] = useState(true)
 
+  console.log(bookId, userId)
+
   const getBook = async (bookId) => {
     try {
       const data = await request('/api/book/get', 'POST', {bookId})
@@ -33,7 +35,7 @@ export const Book = ({bookId, userId}) => {
   }
   const unsubscribeHadler = async () => {
     console.log(userId, bookId)
-    const data = await request('/api/book/unsubscribe', 'POST', {isSubscribe : true, bookId, userId})
+    const data = await request('/api/book/unsubscribe', 'POST', {isSubscribe: true, bookId, userId})
     setisSubscribe(false)
     message(data.message)
   }

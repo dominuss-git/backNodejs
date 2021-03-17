@@ -18,10 +18,10 @@ export const SearchPage = () => {
   })
   const [books, setBooks] = useState([])
 
-  useEffect(() => {
-    message(error)
-    clearError()
-  }, [error, message, clearError])
+  // useEffect(() => {
+  //   message(error)
+  //   clearError()
+  // }, [error, message, clearError])
 
   const changeHandler = (event) => {
     setForm({...form, [event.target.name]: event.target.value})
@@ -31,9 +31,10 @@ export const SearchPage = () => {
     try {
       const data = await request('/api/book/search', 'POST', {...form, userId: context.userId})
       console.log(data.user_books)
-      if(data === null) {
+      if(data === null && data !== undefined) {
         return
-      } 
+      }
+
       setBooks(data)
       setPage(1)
 
@@ -53,11 +54,11 @@ export const SearchPage = () => {
   }
 
   useEffect(() => {
-    if (!status) {
+    if ((!status || !books.books) && !loading) {
       setStatus(true)
       searchHandler()
     }
-  },[books, status, searchHandler])
+  },[books, status, searchHandler, loading])
 
   return (
     <div className="wrapper">

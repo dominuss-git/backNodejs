@@ -36,7 +36,7 @@ export const AuthPage = () => {
 
   return (
     <div className="row">
-      <div className="col s6 offset-s3">
+      <div className="s6 offset-s3 wrapper__card">
         <div className="card blue darken-1">
           <div className="card-content white-text">
             <span className="card-title">Authorisation</span>

@@ -44,8 +44,8 @@ export const RegistPage = () => {
   }
 
   return (
-    <div className="row">
-      <div className="col s6 offset-s3">
+    <div className="row wrapper__card">
+      <div className="s6 offset-s3">
         <div className="card blue darken-1">
           <div className="card-content white-text">
             <span className="card-title">Registretion</span>
@@ -144,7 +144,7 @@ export const RegistPage = () => {
                     id="operator_code" 
                     name="operator_code"
                     onChange={changeHandler}/>
-                    <label htmlFor="operator_code">operator</label>
+                    <label htmlFor="operator_code">code</label>
                </div>
                 <div className="input-field">
                   <input 
@@ -167,7 +167,7 @@ export const RegistPage = () => {
                   onChange={changeHandler}/>
                   <label htmlFor="email">Email</label>
               </div>
-              <div className="registr__wrapper">
+              <div className="pass__wrapper">
                 <div className="input-field">
                   <input 
                     className="yellow-input"

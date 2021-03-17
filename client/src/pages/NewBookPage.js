@@ -32,7 +32,7 @@ export const NewBookPage = () => {
 
   return (
     <div className="row">
-        <div className="col s6 offset-s3">
+        <div className="s6 offset-s3 card__wrapper">
           <div className="card blue darken-1">
             <div className="card-content white-text">
               <span className="card-title">Add new book</span>

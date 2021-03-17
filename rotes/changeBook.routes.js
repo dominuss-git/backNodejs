@@ -101,16 +101,21 @@ router.post('/unsubscribe', async (req, res) => {
   try {
     const {isSubscribe, bookId, userId}  = req.body
 
+
     if (isSubscribe) {
 
-      const subscribedBook = await SubscribedBook.findOne({
-        bookId: bookId,
-        userId: userId
-      }, function(err, docs) {
-        if (err) {
-          return res.json({ message: "failed unsubscribe"})
-        }
-      })
+      let subscribedBook = await SubscribedBook.findById(bookId)
+      
+      if (subscribedBook === null) {
+        subscribedBook = await SubscribedBook.findOne({
+          bookId: bookId,
+          userId: userId
+        }, function(err, docs) {
+          if (err) {
+            return res.json({ message: "failed unsubscribe"})
+          }
+        })
+      }
   
       const user = await User.findOne({books: subscribedBook.id})
       const book = await Book.findOne({subscribers: subscribedBook.id})
@@ -187,28 +192,7 @@ router.post('/delete', async (req, res) => {
 
     await book.remove()
 
-    // user.map((val, j) => {
-    //   for (let i in val.books) {
-    //     if (val.books[i] === bookId) {
-    //       user[j].books.splice(i, 1)
-    //       break
-    //     }
-    //   }
-    // })
-    // for (let i in user) {
-    //   User.findOneAndUpdate({_id: user[i]._id}, {books : user[i].books}, {upset:true}, function(err, docs) {
-    //     if(err) {
-    //       res.status(500).json({message : "failed to subscribe"})
-    //     }
-    //   })
-    // }
-
-    // Book.findByIdAndRemove(bookId, function(err, docs) {
-    //   if(err) {
-    //     return res.status(400).json({message: "failed delete"})
-    //   }
-      return res.status(201).json({message: "book delete"})
-    // })
+    return res.status(201).json({message: "book delete"})
 
   } catch(e) {
     res.status(500).json({ message : "Error"})

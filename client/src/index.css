@@ -42,9 +42,9 @@ input.yellow-input:focus {
 }
 
 .wrapper__card {
-  min-width: 300px;
+  min-width: 300px !important;
   margin: 112px 20px;
-  max-width: 50% !important;
+  max-width: 500px !important;
   align-self: flex-end !important;
 }
 
@@ -114,6 +114,7 @@ input.yellow-input:focus {
   visibility: visible;
 }
 
+
 .book__card:hover {
   cursor: pointer;
   display: block;
@@ -144,6 +145,38 @@ input.yellow-input:focus {
   font-size: 14px;
 }
 
+.navbar {
+  display: none;
+  position: fixed;
+  right: 20px;
+  left: auto;
+  z-index: 10;
+}
+
+.navbar__fields {
+  right: 0px;
+  position: fixed;
+  display: none;
+}
+
+.navbar:hover > .navbar__fields, .navbar__fields:hover {
+  display: flex !important;
+  cursor: pointer;
+  flex-direction: column;
+}
+
+.pass__wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media(max-width: 990px) {
+  .navbar {
+    display: flex;
+  }
+}
+
 @media(max-width: 1400px) {
   .wrapper {
     flex-direction:column
@@ -158,7 +191,13 @@ input.yellow-input:focus {
   .wrapper__card {
     /* font-size: 10px; */
     margin: 0;
-    max-width: 95% !important;
+    /* max-width: 95% !important; */
     align-self: center !important;
+  }
+}
+
+@media(max-width: 465px) {
+  .pass__wrapper {
+    flex-direction: column;
   }
 }
