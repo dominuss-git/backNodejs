@@ -84,7 +84,7 @@ router.put('/:id/change',
     
     const candinate = await User.findOne({ email })
 
-    if (candinate) {
+    if (candinate && candinate.id !== userId) {
       logger.error(`FROM ${req.original} PUT ${email} -- user was already exist STATUS 400`)
       return res.status(400).json({ message : 'user was already exist'})
     }
@@ -102,6 +102,8 @@ router.put('/:id/change',
       logger.error(`FROM ${req.original} PUT password -- wrong password STATUS 400`)
       return res.status(400).json({ message: "wrong password"})
     }
+
+    console.log("hi")
 
     await User.findOneAndUpdate({_id: userId}, {
       name: name,

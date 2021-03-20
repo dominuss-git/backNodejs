@@ -134,7 +134,7 @@ router.put('/subscribe', async (req, res) => {
 router.put('/unsubscribe', async (req, res) => {
   try {
     const {isSubscribe, bookId, userId}  = req.body
-
+    // console.log("hi")
     if (!bookId) {
       logger.error(`FROM ${req.original} PUT ${bookId} -- subscribed book id is required STATUS 400`)
       return res.status(400).json({ message : "You must be authorization required"})
@@ -144,6 +144,7 @@ router.put('/unsubscribe', async (req, res) => {
       logger.error(`FROM ${req.original} PUT ${userId} -- user id id is required STATUS 400`)
       return res.status(400).json({ message : "you must be authorization"})
     }
+    // console.log("hi")
 
     if (isSubscribe) {
 
@@ -159,10 +160,12 @@ router.put('/unsubscribe', async (req, res) => {
             return res.status(500).json({ message : "failed unsubscribe"})
           }
         })
-      } else {
-        logger.error(`FROM ${req.original} PUT ${userId} -- ${err} STATUS 500`)
-        return res.status(500).json({ message : "subscribed book not founde"})
+      } else if (!subscribedBook) {
+        logger.error(`FROM ${req.original} PUT ${userId} -- subscribed book bot found STATUS 500`)
+        return res.status(500).json({ message : "subscribed book not found"})
       }
+
+      console.log("hi")
   
       const user = await User.findOne({books: subscribedBook.id})
       const book = await Book.findOne({subscribers: subscribedBook.id})

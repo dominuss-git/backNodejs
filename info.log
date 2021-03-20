@@ -26,3 +26,52 @@
 {"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:25:11.424Z"}
 {"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:25:41.420Z"}
 {"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:25:51.136Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:30:01.383Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- ReferenceError: err is not defined STATUS 500","level":"error","timestamp":"2021-03-20T15:30:50.272Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- ReferenceError: err is not defined STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:33:08.330Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- ReferenceError: err is not defined STATUS 500","level":"error","timestamp":"2021-03-20T15:33:34.653Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- ReferenceError: err is not defined STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:34:40.524Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:34:51.586Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:34:56.294Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error","timestamp":"2021-03-20T15:35:02.825Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error"}
+{"message":"FROM undefined POST null -- user id is required STATUS 400","level":"error","timestamp":"2021-03-20T15:37:09.059Z"}
+{"message":"FROM undefined POST null -- user id is required STATUS 400","level":"error"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error","timestamp":"2021-03-20T15:37:12.855Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:38:46.415Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error","timestamp":"2021-03-20T15:38:50.943Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:39:04.936Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:39:09.015Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error","timestamp":"2021-03-20T15:39:20.026Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:39:30.841Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:39:42.811Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error","timestamp":"2021-03-20T15:39:47.408Z"}
+{"message":"FROM undefined PUT 604ff8254bc19b637deb5ff3 -- subscribed book bot found STATUS 500","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:40:40.288Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:41:02.009Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:41:07.382Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error","timestamp":"2021-03-20T15:41:37.030Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error","timestamp":"2021-03-20T15:41:42.989Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error","timestamp":"2021-03-20T15:41:52.242Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:42:19.973Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error","timestamp":"2021-03-20T15:42:21.130Z"}
+{"message":"FROM undefined PUT kiril6701@gmail.com -- user was already exist STATUS 400","level":"error"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:44:07.528Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:44:48.591Z"}
+{"message":"Has been started on 192.168.31.5:5000","level":"info","timestamp":"2021-03-20T15:44:55.741Z"}
+{"message":"FROM undefined POST  -- count is required STATUS 400","level":"error","timestamp":"2021-03-20T15:45:15.769Z"}
+{"message":"FROM undefined POST  -- count is required STATUS 400","level":"error"}
+{"message":"FROM undefined POST  -- authors is required STATUS 400","level":"error","timestamp":"2021-03-20T15:45:21.371Z"}
+{"message":"FROM undefined POST  -- authors is required STATUS 400","level":"error"}
+{"message":"FROM undefined POST Fri Jan 01 2021 00:00:00 GMT+0300 (Москва, стандартное время) -- invalid date STATUS 400","level":"error","timestamp":"2021-03-20T15:45:24.501Z"}
+{"message":"FROM undefined POST Fri Jan 01 2021 00:00:00 GMT+0300 (Москва, стандартное время) -- invalid date STATUS 400","level":"error"}
+{"message":"FROM undefined POST Fri Jan 01 2021 00:00:00 GMT+0300 (Москва, стандартное время) -- invalid date STATUS 400","level":"error","timestamp":"2021-03-20T15:45:30.400Z"}
+{"message":"FROM undefined POST Fri Jan 01 2021 00:00:00 GMT+0300 (Москва, стандартное время) -- invalid date STATUS 400","level":"error"}

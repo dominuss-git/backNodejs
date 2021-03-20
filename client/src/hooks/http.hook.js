@@ -25,7 +25,7 @@ export const useHttp = () => {
       // console.log(data)
 
       if(!response.ok) {
-        throw new Error(data.message || "why")
+        throw new Error(data.body.message || "why")
       }
       setLoading(false)
       return data
