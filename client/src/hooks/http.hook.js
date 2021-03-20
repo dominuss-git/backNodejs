@@ -6,11 +6,10 @@ export const useHttp = () => {
 
   const request = useCallback(async (url, method = 'GET', body = null, headers ={}) => {
     setLoading(true)
-
     try {
       if(body) {
         body = JSON.stringify(body)
-        headers['Content-TYpe'] = "application/json"
+        headers['Content-Type'] = "application/json"
       }
 
       const response = await fetch(url, {
@@ -18,7 +17,12 @@ export const useHttp = () => {
         body, 
         headers
       })
-      const data = await response.json()
+
+      // console.log(response.status)
+
+      const data = {body : await response.json(), status : await response.status} 
+
+      // console.log(data)
 
       if(!response.ok) {
         throw new Error(data.message || "why")

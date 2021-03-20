@@ -3,17 +3,35 @@ const User = require('../models/User')
 const UserAdress = require('../models/UserAdress')
 const {check, validationResult} = require('express-validator')
 const bcrypt = require('bcryptjs')
+const logger = require('../config/logger')
 
 const router = Router()
 
-router.post('/get', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const userId = req.body
-    const data = await User.findById(userId.userId)
+    
+    const userId = req.params.id
+
+    if (!userId) {
+      logger.error(`FROM ${req.original} GET ${userId} -- user id is required STATUS 400`)
+      return res.status(400).json({ message : "user id is required"})  // 400
+    }
+
+    const data = await User.findById(userId)
+
+    if (data == null) {
+      logger.error(`FROM ${req.original} GET ${userId} -- user not found STATUS 400`)
+      return res.status(400).json({ message : "user not found"}) // 400
+    }
 
     const userAdress = await UserAdress.findById(data.adress)
 
-    res.status(201).json({
+    if (userAdress == null) {
+      logger.error(`FROM ${req.original} GET ${data.adress} -- user adress not found STATUS 500`)
+      return res.status(500).json({ message : "user adress not found"})
+    }
+
+    res.status(200).json({
       name: data.name,
       surname: data.surname, 
       country: userAdress.country, 
@@ -29,11 +47,12 @@ router.post('/get', async (req, res) => {
     })
     
   } catch(e) {
-    res.status(500).json({ message : "error"})
+    logger.error(`FROM ${req.original} GET ${req.params.id} -- ${e} STATUS 500`)
+    res.status(500).json({ message : e })
   }
 })
 
-router.post('/change',
+router.put('/:id/change',
 [
   check('email', 'invalid Email').isEmail()
 ], async (req, res) => {
@@ -41,6 +60,7 @@ router.post('/change',
     const errors = validationResult(req)
 
     if(!errors.isEmpty()) {
+      logger.error(`FROM ${req.original} PUT ${email} -- invalid email STATUS 400`)
       return res.status(400).json({
         message: 'invalid email'
       })
@@ -65,14 +85,21 @@ router.post('/change',
     const candinate = await User.findOne({ email })
 
     if (candinate) {
+      logger.error(`FROM ${req.original} PUT ${email} -- user was already exist STATUS 400`)
       return res.status(400).json({ message : 'user was already exist'})
     }
 
     const user = await User.findById(userId)
 
+    if (user == null) {
+      logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 400`)
+      return res.status(400).json({ message : "user not found" })
+    }
+
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
+      logger.error(`FROM ${req.original} PUT password -- wrong password STATUS 400`)
       return res.status(400).json({ message: "wrong password"})
     }
 
@@ -84,6 +111,7 @@ router.post('/change',
       {upset:true}, 
       function(err, docs) {
         if(err) {
+          logger.error(`FROM ${req.original} PUT ${userId} -- wrong input data STATUS 400`)
           return res.status(400).json({ message: "wrong input data"})
         }
       }
@@ -102,14 +130,16 @@ router.post('/change',
       {upset: true},
       function(err, docs) {
         if(err) {
+          logger.error(`FROM ${req.original} PUT ${user.adress} -- wrong input data STATUS 400`)
           return res.status(400).json({ message: "wrong input data"})
         }
       })
 
-    res.status(201).json({ message: "data inserted", status: true})
+    res.status(200).json({ message: "data inserted", status: true})
 
   } catch(e) {
-    res.status(500).json({ message : "error"})
+    logger.error(`FROM ${req.original} PUT ${req.params.id} -- ${e} STATUS 500`)
+    res.status(500).json({ message : e})
   }
 
 })

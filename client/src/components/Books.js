@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from '../hooks/message.hook'
 
@@ -15,12 +16,11 @@ function Book({name,
   const [isDeleted, setisDeleted] = useState(false)
   const [isActive, setIsActive] = useState(true)
   const {loading, request} = useHttp()
+  const context = useContext(AuthContext)
 
   const checkSubscribe = () => {
-    console.log(user_books)
     if (subscribers !== null && subscribers !== undefined) {
       for (let val of subscribers) {
-        console.log(val)
         for (let book of user_books) {
           if (book === val) {
             return true
@@ -38,21 +38,44 @@ function Book({name,
   }
   
   const subscribeHadler = async () => {
-    const data = await request('/api/book/subscribe', 'POST', {isSubscribe, bookId, userId})
-    setIsActive(data.isActive)
-    setisSubscribe(data.isActive)
-    message(data.message)
+    const data = await request('/api/books/subscribe', 'PUT', {isSubscribe, bookId, userId})
+    if(Math.round(data.status / 100) === 5) {
+      return
+    } else if (Math.round(data.status / 100) === 4) {
+      message(data.body.message)
+      return
+    } else if (Math.round(data.status / 100) === 2) {
+      setIsActive(data.body.isActive)
+      setisSubscribe(data.body.isActive)
+      message(data.body.message)
+    }
   }
   const unsubscribeHadler = async () => {
-    const data = await request('/api/book/unsubscribe', 'POST', {isSubscribe, bookId, userId})
-    setisSubscribe(false)
-    message(data.message)
+    const data = await request('/api/books/unsubscribe', 'PUT', {isSubscribe, bookId, userId})
+    if(Math.round(data.status / 100) === 5) {
+      return
+    } else if (Math.round(data.status / 100) === 4) {
+      message(data.body.message)
+      return
+    } else if (Math.round(data.status / 100) === 2) {
+      setisSubscribe(false)
+      message(data.bodymessage)
+    }
   }
   const deleteHandler = async () => {
-    const data = await request('/api/book/delete', 'POST', {bookId, userId})
-    setisSubscribe(false)
-    setisDeleted(true)
-    message(data.message)
+    const data = await request(`/api/books/${bookId}`, 'DELETE', null, {
+      Authorization: `Bearer ${context.token}`
+    })
+    if(Math.round(data.status / 100) === 5) {
+      return
+    } else if (Math.round(data.status / 100) === 4) {
+      // message(data.body.message)
+      return
+    } else if (Math.round(data.status / 100) === 2) {
+      setisSubscribe(false)
+      setisDeleted(true)
+      message(data.body.message)
+    }
   }
 
   if(isDeleted) {

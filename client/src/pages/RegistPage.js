@@ -23,10 +23,10 @@ export const RegistPage = () => {
     confirm_password: ''
   })
 
-  useEffect(() => {
-    message(error)
-    clearError()
-  }, [error, message, clearError])
+  // useEffect(() => {
+  //   message(error)
+  //   clearError()
+  // }, [error, message, clearError])
 
   useEffect(() => {
     window.M.updateTextFields()
@@ -39,7 +39,15 @@ export const RegistPage = () => {
   const registerHandler = async () => {
     try {
       const data = await request('/api/auth/register', 'POST', {...form})
-      auth.login(data.token, data.userId)
+
+      if (Math.round(data.status / 100) === 5) {
+        return
+      } else if (Math.round(data.status / 100) === 4) {
+        message(data.body.message)
+        return
+      } else if (Math.round(data.body.status / 100) === 2) {
+        auth.login(data.body.token, data.body.userId)
+      }
     } catch(e) {}
   }
 

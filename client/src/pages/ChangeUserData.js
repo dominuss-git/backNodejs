@@ -40,10 +40,18 @@ export const ChangeUserData = ({userData, userId}) => {
 
   const changeUserDataHandler = async () => {
     try {
-      const data = await request('api/usr/change', 'POST', {...form, userId})
-      message(data.message)
-      if (data.status) {
-        setStatus(true)
+      const data = await request(`/api/account/${userId}/change`, 'PUT', {...form, userId})
+
+      if(Math.round(data.status / 100) === 5) {
+        return
+      } else if (Math.round(data.status / 100) === 4) {
+        message(data.body.message)
+        return
+      } else if (Math.round(data.status / 100) === 2) {
+        message(data.body.message)
+        if (data.status) {
+          setStatus(true)
+        }
       }
     } catch(e) {}
   }

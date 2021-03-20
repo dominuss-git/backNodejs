@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
+import { AuthContext } from '../context/AuthContext'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from '../hooks/message.hook'
 import { Loader } from './Loader'
@@ -10,34 +11,61 @@ export const Book = ({bookId, userId}) => {
   const {loading, request} = useHttp()
   const [book, setBook] = useState()
   const [isSubscribe, setisSubscribe] = useState(true)
+  const {token} = useContext(AuthContext)
 
-  console.log(bookId, userId)
 
   const getBook = async (bookId) => {
     try {
-      const data = await request('/api/book/get', 'POST', {bookId})
+      const data = await request(`/api/books/${bookId}`, 'GET', null, {
+        Authorization : `Bearer ${token}`
+      })
+
       console.log(data)
-      setBook(data)
+
+      if (Math.round(data.status / 100) === 5) {
+        return
+      } else if (Math.round(data.status / 100) === 4) {
+        // message(data.body.message)
+        return
+      } else if (Math.round(data.status / 100) === 2) {
+        console.log(data)
+        setBook(data.body)
+      }
     } catch(e) {}
   }
 
   useEffect(() => {
-    if(!status) {
-      setStatus(true)
+    console.log(bookId)
+    if(book === undefined) {
+      // setStatus(true)
       getBook(bookId)
     }
-  },[status, setStatus, bookId])
+  },[book, bookId, getBook])
 
   const subscribeHadler = async () => {
-    const data = await request('/api/book/subscribe', 'POST', {isSubscribe: false, bookId, userId})
-    setisSubscribe(true)
-    message(data.message)
+    const data = await request('/api/books/subscribe', 'PUT', {isSubscribe: false, bookId, userId})
+
+    if(Math.round(data.status / 100) === 5) {
+      return
+    } else if (Math.round(data.status / 100) === 4) {
+      return
+    } else if (Math.round(data.status / 100) === 2) {
+      setisSubscribe(true)
+    }
+    message(data.body.message)
   }
+
   const unsubscribeHadler = async () => {
-    console.log(userId, bookId)
-    const data = await request('/api/book/unsubscribe', 'POST', {isSubscribe: true, bookId, userId})
-    setisSubscribe(false)
-    message(data.message)
+    const data = await request('/api/books/unsubscribe', 'PUT', {isSubscribe: true, bookId, userId})
+
+    if(Math.round(data.status / 100) === 5) {
+      return
+    } else if (Math.round(data.status / 100) === 4) {
+      return
+    } else if (Math.round(data.status / 100) === 2) {
+      setisSubscribe(false)
+      message(data.body.message)
+    }
   }
 
   if (book) {

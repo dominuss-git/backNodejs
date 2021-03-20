@@ -3,23 +3,33 @@ import {AuthContext} from '../context/AuthContext'
 import {useHttp} from '../hooks/http.hook'
 import {Loader} from '../components/Loader'
 import {Book} from '../components/Book'
-import {Link} from "react-router-dom"
+import {useHistory} from "react-router-dom"
 import { ChangeUserData } from './ChangeUserData'
+import { useMessage } from '../hooks/message.hook'
 
 export const AcountPage = () => {
   const context = useContext(AuthContext)
   const {request, loading} = useHttp()
   const [userData, setUserData] = useState()
-  const [status, setStatus] = useState(false)
+  const message = useMessage()
+  // const [status, setStatus] = useState(false)
   const [isChange, setIsChange] = useState(false)
+  const history = useHistory()
   
   const getUserData = async () => {
     try {
-      const data = await request('/api/usr/get', 'POST', {userId :context.userId})
-      if(data === null) {
+      const data = await request(`/api/account/${context.userId}`, 'GET', null, {
+        Authorization: `Bearer ${context.token}`
+      })
+      if(Math.round(data.status / 100) === 5) {
         return
-      } 
-      setUserData(data)
+      } else if (Math.round(data.status / 100) === 4) {
+        // message(data.body.message)
+        return
+      } else if (Math.round(data.status / 100) === 2) {
+        // console.log(data.body)
+        setUserData(data.body)
+      }
 
     } catch(e) {}
   }
@@ -29,11 +39,12 @@ export const AcountPage = () => {
   }
 
   useEffect(() => {
-    if (!status) {
-      setStatus(true)
-      getUserData()
-    }
-  },[status, setStatus, getUserData])
+    setTimeout(() => {
+      if (!userData && !loading) {
+        getUserData()
+      }
+    }, 2000)
+  },[userData, loading, getUserData])
   
   if (userData && !isChange) {
     return (
@@ -106,6 +117,7 @@ export const AcountPage = () => {
         </div>
     )
   } else if (isChange) {
+    history.push(`/account/${context.userId}/change`)
     return (
       <div>
         <ChangeUserData userData={userData} userId={context.userId} />

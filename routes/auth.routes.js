@@ -5,6 +5,7 @@ const User = require('../models/User')
 const UserAdress = require('../models/UserAdress')
 const jwt = require('jsonwebtoken')
 const config = require('config')
+const logget = require('../config/logger')
 
 const router = Router()
 
@@ -19,6 +20,7 @@ router.post(
     const errors = validationResult(req)
 
     if(!errors.isEmpty()) {
+      logger.error(`FROM ${req.original} POST ${req.body.email} -- invalid regitration data STATUS 400`)
       return res.status(400).json({
         message: 'invalid registretion data'
       })
@@ -43,9 +45,11 @@ router.post(
     const candinate = await User.findOne({ email })
 
     if (candinate) {
+      logger.error(`FROM ${req.original} POST ${email} -- user was already exist STATUS 400`)
       return res.status(400).json({ message : 'user was already exist'})
     }
     if (password !== confirm_password) {
+      logger.error(`FROM ${req.original} POST ${email} -- passwords mismatch STATUS 400`)
       return res.status(400).json({ message : 'passwords mismatch'})
     }
 
@@ -63,7 +67,7 @@ router.post(
     })
 
     await adress.save()
-    // console.log(req.body)
+
     const user = new User({
       name, 
       surname, 
@@ -84,11 +88,11 @@ router.post(
         expiresIn: '1h'
       }
     )
-    // console.log(user.id)
     
-    res.json({ token, userId: user.id })
+    res.status(201).json({ token, userId: user.id })
 
   } catch(e) {
+    logger.error(`FROM ${req.original} POST ${req.body.email} -- ${e} STATUS 500`)
     res.status(500).json({ message : 'Error' })
   }
 })
@@ -104,6 +108,7 @@ router.post(
       const errors = validationResult(req)
 
       if(!errors.isEmpty()) {
+        logger.error(`FROM ${req.original} POST ${req.body.email} -- invalid login data STATUS 400`)
         return res.status(400).json({
           message: 'invalid login data'
         })
@@ -114,12 +119,14 @@ router.post(
       const user = await User.findOne({ email })
 
       if(!user) {
+        logger.error(`FROM ${req.original} POST ${email} -- user not exist STATUS 400`)
         return res.status(400).json({ message: 'user not exist'})
       }
 
       const isMatch = await bcrypt.compare(password, user.password)
 
       if (!isMatch) {
+        logger.error(`FROM ${req.original} POST ${email} -- passwords missmatch STATUS 400`)
         return res.status(400).json({ message: "wrong password, try again"})
       }
 
@@ -136,6 +143,7 @@ router.post(
       res.json({ token, userId: user.id })
 
     } catch(e) {
+      logger.error(`FROM ${req.original} POST ${req.body.email} -- ${e} STATUS 500`)
       res.status(500).json({ message : 'Error' })
     }
 })

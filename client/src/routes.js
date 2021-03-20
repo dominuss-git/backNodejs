@@ -5,34 +5,38 @@ import { RegistPage } from './pages/RegistPage'
 import { NewBookPage } from './pages/NewBookPage'
 import { SearchPage } from './pages/SearchPage'
 import { AcountPage } from './pages/AcountPage'
+import {ChangeUserData} from './pages/ChangeUserData'
 
 export const useRoutes = isAuthentification => {
   if (isAuthentification) {
     return (
       <Switch>
-        <Route path="/create" exact>
+        <Route path="/books/create" exact>
           <NewBookPage />
         </Route>
-        <Route path="/search" exact>
+        <Route path="/books" exact>
           <SearchPage />
         </Route>
-        <Route path="/account">
+        <Route path="/account/:id">
           <AcountPage />
         </Route>
-        <Redirect to="/search" />
+        <Route path="/account/:id/change">
+          <ChangeUserData />
+        </Route>
+        <Redirect to="/books" />
       </Switch>
     )
   } 
   
   return (
     <Switch>
-      <Route path="/" exact>
+      <Route path="/login" exact>
         <AuthPage />
       </Route>
       <Route path="/registr" exact>
           <RegistPage />
       </Route>
-      <Redirect to="/" />
+      <Redirect to="/login" />
     </Switch>
   ) 
 }

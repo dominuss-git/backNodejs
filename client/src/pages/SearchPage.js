@@ -9,7 +9,7 @@ export const SearchPage = () => {
   const context = useContext(AuthContext)
   const message = useMessage()
   const {loading, request, error, clearError} = useHttp()
-  const [status, setStatus] = useState(false) 
+  // const [status, setStatus] = useState(false) 
   const [page, setPage] = useState(1)
   const [form, setForm] = useState({
     name: '',
@@ -29,14 +29,16 @@ export const SearchPage = () => {
 
   const searchHandler = async () => {
     try {
-      const data = await request('/api/book/search', 'POST', {...form, userId: context.userId})
-      console.log(data.user_books)
-      if(data === null && data !== undefined) {
+      const data = await request('/api/books/search', 'POST', {...form, userId: context.userId})
+      if(Math.round(data.status / 100) === 5) {
         return
+      } else if (Math.round(data.status / 100) === 4) {
+        message(data.body.message)
+        return
+      } else if (Math.round(data.status / 100) === 2) {
+        setBooks(data.body)
+        setPage(1)
       }
-
-      setBooks(data)
-      setPage(1)
 
     } catch(e) {}
   }
@@ -54,11 +56,13 @@ export const SearchPage = () => {
   }
 
   useEffect(() => {
-    if ((!status || !books.books) && !loading) {
-      setStatus(true)
-      searchHandler()
+    if (!books.books && !loading) {
+      setTimeout(() => {
+        // setStatus(true)
+        searchHandler()
+      }, 5000)
     }
-  },[books, status, searchHandler, loading])
+  },[books, searchHandler, loading])
 
   return (
     <div className="wrapper">
@@ -108,7 +112,7 @@ export const SearchPage = () => {
           {books.books !== undefined ? 
             books.books.map((book, i) => {
               if (page * 5 > i && (page - 1) * 5 <= i) {
-              return (
+                return (
                 <Book 
                   subscribers={book.subscribers}
                   user_books={books.user_books}

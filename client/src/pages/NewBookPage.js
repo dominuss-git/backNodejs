@@ -25,8 +25,13 @@ export const NewBookPage = () => {
 
   const AddHandler = async () => {
     try {
-      const data = await request('/api/book/add', 'POST', {...form})
-      message(data.message)
+      const data = await request('/api/books/create', 'POST', {...form})
+      
+      if(Math.round(data.status / 100) === 5) {
+        return
+      } 
+
+      message(data.body.message)
     } catch(e) {}
   }
 
