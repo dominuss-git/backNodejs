@@ -5,7 +5,7 @@ const User = require('../models/User')
 const UserAdress = require('../models/UserAdress')
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const logget = require('../config/logger')
+const logger = require('../config/logger')
 
 const router = Router()
 

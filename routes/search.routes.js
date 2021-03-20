@@ -23,8 +23,8 @@ router.post('/search', async (req, res) => {
     })
 
     if (user == null) {
-      logger.error(`FROM ${req.original} POST ${userId} -- user id is required STATUS 400`)
-      return res.status(400).json({ message : "you must be authorization"})
+      logger.error(`FROM ${req.original} POST ${userId} -- user id is required STATUS 404`)
+      return res.status(404).json({ message : "you must be authorization"})
     }
 
     querySelection = {

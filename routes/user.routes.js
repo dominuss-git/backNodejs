@@ -20,8 +20,8 @@ router.get('/:id', async (req, res) => {
     const data = await User.findById(userId)
 
     if (data == null) {
-      logger.error(`FROM ${req.original} GET ${userId} -- user not found STATUS 400`)
-      return res.status(400).json({ message : "user not found"}) // 400
+      logger.error(`FROM ${req.original} GET ${userId} -- user not found STATUS 404`)
+      return res.status(404).json({ message : "user not found"}) 
     }
 
     const userAdress = await UserAdress.findById(data.adress)
@@ -92,8 +92,8 @@ router.put('/:id/change',
     const user = await User.findById(userId)
 
     if (user == null) {
-      logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 400`)
-      return res.status(400).json({ message : "user not found" })
+      logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 404`)
+      return res.status(404).json({ message : "user not found" })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
@@ -145,5 +145,30 @@ router.put('/:id/change',
   }
 
 })
+
+router.delete('/:id/delete', async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    if (!userId) {
+      logger.error(`FROM ${req.original} DELETE ${userId} -- user id is required STATUS 404`)
+      return res.status(404).json({ message : "you must be authorization"})
+    }
+
+    const user = await User.findById(userId)
+
+    if (user.books.length !== 0) {
+      logger.error(`FROM ${req.original} DELETE ${userId} -- user have books STATUS 400`)
+      return res.status(400).json({ message : "you cannot delete your account until you turn in all the books"})
+    } else {
+      await user.remove()
+      res.status(200).json({})
+    }
+
+  } catch (e) {
+    logger.error(`FROM ${req.original} DELETE ${req.params.id} -- ${e} STATUS 500`)
+    res.status(500).json({ message: "error" })
+  }
+}) 
 
 module.exports = router

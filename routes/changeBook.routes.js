@@ -77,13 +77,12 @@ router.put('/subscribe', async (req, res) => {
     const book = await Book.findById(bookId)
 
     if (user === null) {
-      logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 400`)
-      return res.status(400).json({ message : "you must be authorization"})
+      logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 404`)
+      return res.status(404).json({ message : "you must be authorization"})
     }
 
     if (book === null) {
       logger.error(`FROM ${req.original} PUT ${bookId} -- book is deleted STATUS 404`)
-      // return res.status(400).json({ message : "you must be authorization"})
       return res.status(404).json({message: "book is deleted", isActive: false})
     }
 
@@ -134,7 +133,7 @@ router.put('/subscribe', async (req, res) => {
 router.put('/unsubscribe', async (req, res) => {
   try {
     const {isSubscribe, bookId, userId}  = req.body
-    // console.log("hi")
+
     if (!bookId) {
       logger.error(`FROM ${req.original} PUT ${bookId} -- subscribed book id is required STATUS 400`)
       return res.status(400).json({ message : "You must be authorization required"})
@@ -144,7 +143,6 @@ router.put('/unsubscribe', async (req, res) => {
       logger.error(`FROM ${req.original} PUT ${userId} -- user id id is required STATUS 400`)
       return res.status(400).json({ message : "you must be authorization"})
     }
-    // console.log("hi")
 
     if (isSubscribe) {
 
@@ -171,13 +169,13 @@ router.put('/unsubscribe', async (req, res) => {
       const book = await Book.findOne({subscribers: subscribedBook.id})
   
       if (book === null) {
-        logger.error(`FROM ${req.original} PUT ${book} -- book not found STATUS 400`)
-        return res.status(400).json({message: "book is deleted"})
+        logger.error(`FROM ${req.original} PUT ${book} -- book not found STATUS 404`)
+        return res.status(404).json({message: "book is deleted"})
       }
 
       if (user === null) {
-        logger.error(`FROM ${req.original} PUT ${user} -- user not found STATUS 400`)
-        return res.status(400).json({message: "You must be authorization"})
+        logger.error(`FROM ${req.original} PUT ${user} -- user not found STATUS 404`)
+        return res.status(404).json({message: "You must be authorization"})
       }
 
       for (let i in user.books) {
@@ -234,8 +232,8 @@ router.delete('/:id', async (req, res) => {
     const book = await Book.findById(bookId)
 
     if (book === null) {
-      logger.error(`FROM ${req.original} DELETE ${bookId} -- book not found STATUS 400`)
-      return res.status(400).json({ message : "book not found"})
+      logger.error(`FROM ${req.original} DELETE ${bookId} -- book not found STATUS 404`)
+      return res.status(404).json({ message : "book not found"})
     }
 
     book.subscribers.map(async (val, i) => {

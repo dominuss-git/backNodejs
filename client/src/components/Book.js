@@ -35,7 +35,6 @@ export const Book = ({bookId, userId}) => {
   }
 
   useEffect(() => {
-    console.log(bookId)
     if(book === undefined) {
       // setStatus(true)
       getBook(bookId)

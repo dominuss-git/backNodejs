@@ -22,11 +22,12 @@ export const useHttp = () => {
 
       const data = {body : await response.json(), status : await response.status} 
 
+      // if(!response.ok) {
+      //   throw new Error(data.body.message || "why")
+      // }
+
       // console.log(data)
 
-      if(!response.ok) {
-        throw new Error(data.body.message || "why")
-      }
       setLoading(false)
       return data
 

@@ -34,6 +34,25 @@ export const AcountPage = () => {
     } catch(e) {}
   }
 
+  const deleteHandler = async () => {
+    try {
+      const data = await request(`/api/account/${context.userId}/delete`, 'DELETE', null)
+
+      console.log(data.status)
+
+      if(Math.round(data.status / 100) === 5) {
+        return
+      } else if (Math.round(data.status / 100) === 4) {
+        message(data.body.message)
+        return
+      } else if (Math.round(data.status / 100) === 2) {
+        history.push('/login')
+        context.isAuthenticated = false
+      }
+
+    } catch(e) {}
+  }
+
   const changeHandler = () => {
     setIsChange(true)
   }
@@ -108,11 +127,12 @@ export const AcountPage = () => {
               Change
             </button >
             &ensp;
-            <button 
+            {/* <button 
               className="btn red darken-4"
+              onClick={deleteHandler}
               disabled={loading}>  
               DELETE
-            </button>
+            </button> */}
           </div>
         </div>
     )
