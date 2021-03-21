@@ -161,6 +161,14 @@ router.delete('/:id/delete', async (req, res) => {
       logger.error(`FROM ${req.original} DELETE ${userId} -- user have books STATUS 400`)
       return res.status(400).json({ message : "you cannot delete your account until you turn in all the books"})
     } else {
+
+      await UserAdress.findByIdAndRemove(user.adress, function(err, docs) {
+        if (err) {
+          logger.error(`FROM ${req.original} DELETE ${req.params.id} -- ${err} STATUS 500`)
+          return res.status(500).json({ message: "user adress not found" })
+        }
+      })
+
       await user.remove()
       res.status(200).json({})
     }

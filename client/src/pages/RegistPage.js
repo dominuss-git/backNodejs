@@ -2,9 +2,11 @@ import React, {useEffect, useState, useContext} from 'react'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from '../hooks/message.hook'
 import {AuthContext} from "../context/AuthContext"
+import { useHistory } from 'react-router'
 
 export const RegistPage = () => {
   const auth = useContext(AuthContext)
+  const history = useHistory() 
   const message = useMessage()
   const {loading, request, error, clearError} = useHttp()
   const [form, setForm] = useState({
@@ -40,13 +42,17 @@ export const RegistPage = () => {
     try {
       const data = await request('/api/auth/register', 'POST', {...form})
 
+      // console.log(data)
+
       if (Math.round(data.status / 100) === 5) {
         return
       } else if (Math.round(data.status / 100) === 4) {
         message(data.body.message)
         return
-      } else if (Math.round(data.body.status / 100) === 2) {
+      } else if (Math.round(data.status / 100) === 2) {
         auth.login(data.body.token, data.body.userId)
+        console.log(data)
+        // history.push('/books')
       }
     } catch(e) {}
   }

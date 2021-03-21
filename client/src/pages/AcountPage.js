@@ -46,8 +46,8 @@ export const AcountPage = () => {
         message(data.body.message)
         return
       } else if (Math.round(data.status / 100) === 2) {
-        history.push('/login')
-        context.isAuthenticated = false
+        context.logout()
+        history.push('/')
       }
 
     } catch(e) {}
@@ -127,12 +127,12 @@ export const AcountPage = () => {
               Change
             </button >
             &ensp;
-            {/* <button 
+            <button 
               className="btn red darken-4"
               onClick={deleteHandler}
               disabled={loading}>  
               DELETE
-            </button> */}
+            </button>
           </div>
         </div>
     )
