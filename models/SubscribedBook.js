@@ -1,18 +1,18 @@
-const {Schema, model, ObjectId} = require('mongoose')
+const { Schema, model, ObjectId } = require('mongoose');
 
 const schema = new Schema({
   userId: {
     type: ObjectId,
-    required: true
+    required: true,
   },
-  bookId : {
+  bookId: {
     type: ObjectId,
     required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
-})
+    default: Date.now,
+  },
+});
 
-module.exports = model('SubscribedBook', schema)
+module.exports = model('SubscribedBook', schema);

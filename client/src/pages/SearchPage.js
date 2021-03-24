@@ -8,8 +8,7 @@ import { AuthContext } from '../context/AuthContext'
 export const SearchPage = () => {
   const context = useContext(AuthContext)
   const message = useMessage()
-  const {loading, request, error, clearError} = useHttp()
-  // const [status, setStatus] = useState(false) 
+  const {loading, request} = useHttp()
   const [page, setPage] = useState(1)
   const [form, setForm] = useState({
     name: '',
@@ -17,11 +16,6 @@ export const SearchPage = () => {
     authors: ''
   })
   const [books, setBooks] = useState([])
-
-  // useEffect(() => {
-  //   message(error)
-  //   clearError()
-  // }, [error, message, clearError])
 
   const changeHandler = (event) => {
     setForm({...form, [event.target.name]: event.target.value})
@@ -58,9 +52,8 @@ export const SearchPage = () => {
   useEffect(() => {
     if (!books.books && !loading) {
       setTimeout(() => {
-        // setStatus(true)
         searchHandler()
-      }, 5000)
+      }, 3000)
     }
   },[books, searchHandler, loading])
 

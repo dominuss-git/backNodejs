@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from '../hooks/message.hook'
@@ -59,7 +59,7 @@ function Book({name,
       return
     } else if (Math.round(data.status / 100) === 2) {
       setisSubscribe(false)
-      message(data.bodymessage)
+      message(data.body.message)
     }
   }
   const deleteHandler = async () => {
@@ -69,7 +69,6 @@ function Book({name,
     if(Math.round(data.status / 100) === 5) {
       return
     } else if (Math.round(data.status / 100) === 4) {
-      // message(data.body.message)
       return
     } else if (Math.round(data.status / 100) === 2) {
       setisSubscribe(false)

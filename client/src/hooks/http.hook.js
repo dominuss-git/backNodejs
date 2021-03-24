@@ -18,15 +18,7 @@ export const useHttp = () => {
         headers
       })
 
-      // console.log(response.status)
-
       const data = {body : await response.json(), status : await response.status} 
-
-      // if(!response.ok) {
-      //   throw new Error(data.body.message || "why")
-      // }
-
-      // console.log(data)
 
       setLoading(false)
       return data

@@ -12,7 +12,6 @@ export const AcountPage = () => {
   const {request, loading} = useHttp()
   const [userData, setUserData] = useState()
   const message = useMessage()
-  // const [status, setStatus] = useState(false)
   const [isChange, setIsChange] = useState(false)
   const history = useHistory()
   
@@ -24,10 +23,8 @@ export const AcountPage = () => {
       if(Math.round(data.status / 100) === 5) {
         return
       } else if (Math.round(data.status / 100) === 4) {
-        // message(data.body.message)
         return
       } else if (Math.round(data.status / 100) === 2) {
-        // console.log(data.body)
         setUserData(data.body)
       }
 

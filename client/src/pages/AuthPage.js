@@ -26,8 +26,6 @@ export const AuthPage = () => {
     try {
       const data = await request('/api/auth/login', 'POST', {...form})
 
-      console.log(data)
-
       if(Math.round(data.status / 100) === 5) {
         return
       } else if (Math.round(data.status / 100) === 4) {

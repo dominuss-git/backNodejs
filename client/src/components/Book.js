@@ -25,7 +25,6 @@ export const Book = ({bookId, userId}) => {
       if (Math.round(data.status / 100) === 5) {
         return
       } else if (Math.round(data.status / 100) === 4) {
-        // message(data.body.message)
         return
       } else if (Math.round(data.status / 100) === 2) {
         console.log(data)
@@ -36,7 +35,6 @@ export const Book = ({bookId, userId}) => {
 
   useEffect(() => {
     if(book === undefined) {
-      // setStatus(true)
       getBook(bookId)
     }
   },[book, bookId, getBook])
