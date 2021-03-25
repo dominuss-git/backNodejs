@@ -1,5 +1,5 @@
 const {
-  Schema, model, ObjectId, Types,
+  Schema, model,
 } = require('mongoose');
 
 const schema = new Schema({

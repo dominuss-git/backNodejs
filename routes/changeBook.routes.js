@@ -1,13 +1,10 @@
-// const express = require('express')
 const { Router } = require('express');
-const Book = require('../models/Book');
-const User = require('../models/User');
-const SubscribedBook = require('../models/SubscribedBook');
-const findOneAndUpdate = require('../models/adapters/findAndUpdate');
-// const mongoose = require('mongoose')
-// const moment = require('moment')
 const logger = require('../config/logger');
-const GetAdapter = require('../models/adapters/get');
+const Book = require('../database/book/Book');
+const SubscribedBook = require('../database/subscribedBook/SubscribedBook');
+const UserAdapter = require('../database/user/adapter');
+const BookAdapter = require('../database/book/adapter');
+const SubBookAdapter = require('../database/subscribedBook/adapter');
 
 const router = Router();
 
@@ -17,9 +14,7 @@ router.post('/create', async (req, res) => {
       name, genre, authors, data, count,
     } = req.body;
 
-    // name = name.split(' ').join(' ')
-
-    if (name === '' || name[0] == ' ') {
+    if (name === '' || name[0] === ' ') {
       logger.error(`FROM ${req.original} POST ${name} -- name is required STATUS 400`);
       return res.status(400).json({ message: 'You must be enter book name' });
     } if (genre === '' || genre[0] === ' ') {
@@ -37,9 +32,7 @@ router.post('/create', async (req, res) => {
     }
 
     const author = authors.split(',');
-
     const date = new Date(data);
-    // date = date.toLocaleString('en-US', options)
 
     if (!date.getMonth() || !date.getDate() || !date.getFullYear()) {
       logger.error(`FROM ${req.original} POST ${date} -- invalid date STATUS 400`);
@@ -56,16 +49,18 @@ router.post('/create', async (req, res) => {
 
     await book.save();
 
-    res.status(201).json({ message: 'Book add' });
+    return res.status(201).json({ message: 'Book add' });
   } catch (e) {
     logger.error(`FROM ${req.original} POST book -- ${e} is required STATUS 500`);
-    res.status(500).json({ message: 'Error' });
+    return res.status(500).json({ message: 'Error' });
   }
 });
 
 router.put('/subscribe', async (req, res) => {
   try {
     const { isSubscribe, bookId, userId } = req.body;
+    const usr = new UserAdapter();
+    const bookAdapter = new BookAdapter();
 
     if (!userId) {
       logger.error(`FROM ${req.original} PUT ${userId} -- user id is required STATUS 400`);
@@ -77,12 +72,8 @@ router.put('/subscribe', async (req, res) => {
       return res.status(400).json({ message: 'you must be authorization' });
     }
 
-    // const user = await User.findById(userId)
-    // const user = (await GetAdapter('User', { _id : userId}))[0]
-    const user = (await GetAdapter('User', { _id: userId }))[0];
-    // console.log(user)
-    const book = (await GetAdapter('Book', { _id: bookId }))[0];
-    // const book = await Book.findById(bookId)
+    const user = (await usr.find({ _id: userId }))[0];
+    const book = (await bookAdapter.find({ _id: bookId }))[0];
 
     if (user === null) {
       logger.error(`FROM ${req.original} PUT ${userId} -- user not found STATUS 404`);
@@ -96,7 +87,6 @@ router.put('/subscribe', async (req, res) => {
 
     if (book.count === book.subscribers.length) {
       logger.error(`FROM ${req.original} PUT ${bookId} -- not available STATUS 204`);
-      // return res.status(400).json({ message : "you must be authorization"})
       return res.status(204).json({ message: 'not available', isActive: false });
     }
 
@@ -106,16 +96,20 @@ router.put('/subscribe', async (req, res) => {
         userId,
       });
 
-      await subscribedBook.save();
-
       user.books[user.books.length] = subscribedBook.id;
       book.subscribers[book.subscribers.length] = subscribedBook.id;
 
-      findOneAndUpdate('User', { _id: userId }, { books: user.books })
-        .then(findOneAndUpdate('Book', { _id: bookId }, { subscribers: book.subscribers }))
+      usr.findOneAndUpdate({ _id: userId }, { books: user.books })
+        .then(bookAdapter.findOneAndUpdate({ _id: bookId }, { subscribers: book.subscribers }))
         .then(() => res.status(201).json({ message: 'subscribed', isActive: true })).catch(() => {
           logger.error(`FROM ${req.original} PUT ${userId} -- subscribe server error STATUS 500`);
-          res.status(500).json({ message: 'Server Error failed subscribe' });
+          return res.status(500).json({ message: 'Server Error failed subscribe' });
+        })
+        .then(() => subscribedBook.save())
+        .then(() => res.status(200).json({ message: 'subscribed' }))
+        .catch((e) => {
+          logger.error(`FROM ${req.original} PUT ${req.body.userId} -- ${e} STATUS 500`);
+          return res.status(500).json({ message: 'Error' });
         });
     } else {
       logger.error(`FROM ${req.original} PUT ${userId} -- already subscribed STATUS 400`);
@@ -123,13 +117,16 @@ router.put('/subscribe', async (req, res) => {
     }
   } catch (e) {
     logger.error(`FROM ${req.original} PUT ${req.body.userId} -- ${e} STATUS 500`);
-    res.status(500).json({ message: 'Error' });
+    return res.status(500).json({ message: 'Error' });
   }
 });
 
 router.put('/unsubscribe', async (req, res) => {
   try {
     const { isSubscribe, bookId, userId } = req.body;
+    const usr = new UserAdapter();
+    const bookAdapter = new BookAdapter();
+    const subBook = new SubBookAdapter();
 
     if (!bookId) {
       logger.error(`FROM ${req.original} PUT ${bookId} -- subscribed book id is required STATUS 400`);
@@ -145,7 +142,7 @@ router.put('/unsubscribe', async (req, res) => {
       let subscribedBook = await SubscribedBook.findById(bookId);
 
       if (subscribedBook === null) {
-        subscribedBook = (await GetAdapter('SB', {
+        subscribedBook = (await subBook.find({
           bookId,
           userId,
         }))[0];
@@ -154,11 +151,8 @@ router.put('/unsubscribe', async (req, res) => {
         return res.status(500).json({ message: 'subscribed book not found' });
       }
 
-      // console.log("hi")
-
-      const user = (await GetAdapter('User', { books: subscribedBook.id }))[0];
-      // const book = await Book.findOne({subscribers: subscribedBook.id})
-      const book = (await GetAdapter('Book', { subscribers: subscribedBook.id }))[0];
+      const user = (await usr.find({ books: subscribedBook.id }))[0];
+      const book = (await bookAdapter.find({ subscribers: subscribedBook.id }))[0];
 
       if (book === null) {
         logger.error(`FROM ${req.original} PUT ${book} -- book not found STATUS 404`);
@@ -184,14 +178,14 @@ router.put('/unsubscribe', async (req, res) => {
         }
       }
 
-      findOneAndUpdate('User', { _id: userId }, { books: user.books })
-        .then(findOneAndUpdate('Book', { _id: book.id }, { subscribers: book.subscribers }))
+      usr.findOneAndUpdate({ _id: userId }, { books: user.books })
+        .then(bookAdapter.findOneAndUpdate({ _id: book.id }, { subscribers: book.subscribers }))
         .then(() => (
           subscribedBook.remove()
         )).then(() => res.status(201).json({ message: 'unsubscribed' }))
         .catch(() => {
           logger.error(`FROM ${req.original} PUT ${userId} -- unsubscribe server error STATUS 500`);
-          res.status(500).json({ message: 'Server error' });
+          return res.status(500).json({ message: 'Server error' });
         });
     } else {
       logger.error(`FROM ${req.original} PUT ${userId} -- not subscribe STATUS 400`);
@@ -199,20 +193,23 @@ router.put('/unsubscribe', async (req, res) => {
     }
   } catch (e) {
     logger.error(`FROM ${req.original} PUT ${req.body.userId} -- ${e} STATUS 500`);
-    res.status(500).json({ message: 'Error' });
+    return res.status(500).json({ message: 'Error' });
   }
 });
 
 router.delete('/:id', async (req, res) => {
   try {
     const bookId = req.params.id;
+    const usr = new UserAdapter();
+    const bookAdapter = new BookAdapter();
+    const subBook = new SubBookAdapter();
 
     if (!bookId) {
       logger.error(`FROM ${req.original} DELETE ${bookId} -- book id is required STATUS 400`);
       return res.status(400).json({ message: 'you must be authorization' });
     }
 
-    const book = (await GetAdapter('Book', { _id: bookId }))[0];// await Book.findById(bookId)
+    const book = (await bookAdapter.find({ _id: bookId }))[0];
 
     if (book === null) {
       logger.error(`FROM ${req.original} DELETE ${bookId} -- book not found STATUS 404`);
@@ -220,28 +217,17 @@ router.delete('/:id', async (req, res) => {
     }
 
     book.subscribers.map(async (val, i) => {
-      const subscriber = (await GetAdapter('SB', { _id: val }))[0]; // await SubscribedBook.findById(val)
-      const user = (await GetAdapter('User', { _id: subscriber.userId }))[0];// await User.findById(subscriber.userId)
+      const subscriber = (await subBook.find({ _id: val }))[0];
+      const user = (await usr.find({ _id: subscriber.userId }))[0];
 
-      console.log(subscriber, user);
-
-      for (const i in user.books) {
-        if (String(user.books[i]) === String(val)) {
+      for (const j in user.books) {
+        if (String(user.books[j]) === String(val)) {
           user.books.splice(i, 1);
           break;
         }
       }
 
-      console.log(user.books);
-
-      // User.findOneAndUpdate({_id: user._id}, {books : user.books}, {upset:true}, function(err, docs) {
-      //   if(err) {
-      //     logger.error(`FROM ${req.original} DELETE ${bookId} -- failed to delete STATUS 404`)
-      //     res.status(404).json({message : "failed to delete"})
-      //   }
-      // })
-
-      findOneAndUpdate('User', { _id: user._id }, { books: user.books })
+      usr.findOneAndUpdate({ _id: user._id }, { books: user.books })
         .then(() => {
           logger.error(`FROM ${req.original} DELETE ${bookId} -- failed delete STATUS 500`);
           return subscriber.remove();
@@ -249,8 +235,6 @@ router.delete('/:id', async (req, res) => {
         .catch(() => {
           res.status(500).json({ message: 'Server Error' });
         });
-
-      // await subscriber.remove()
     });
 
     await book.remove();
@@ -258,7 +242,7 @@ router.delete('/:id', async (req, res) => {
     return res.status(200).json({ message: 'book delete' });
   } catch (e) {
     logger.error(`FROM ${req.original} DELETE ${req.body.bookId} -- ${e} STATUS 500`);
-    res.status(500).json({ message: 'Error' });
+    return res.status(500).json({ message: 'Error' });
   }
 });
 

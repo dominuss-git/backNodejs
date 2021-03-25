@@ -3,10 +3,10 @@ const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const User = require('../models/User');
-const UserAdress = require('../models/UserAdress');
+const User = require('../database/user/User');
 const logger = require('../config/logger');
-const GetAdapter = require('../models/adapters/get');
+const UserAdapter = require('../database/user/adapter');
+const UserAdress = require('../database/userAdress/UserAdress');
 
 const router = Router();
 
@@ -19,6 +19,7 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req);
+      const usr = new UserAdapter();
 
       if (!errors.isEmpty()) {
         logger.error(`FROM ${req.original} POST ${req.body.email} -- invalid regitration data STATUS 400`);
@@ -43,7 +44,7 @@ router.post(
         confirm_password,
       } = req.body;
 
-      const candinate = (await GetAdapter('User', { email }))[0];// await User.findOne({ email })
+      const candinate = (await usr.find({ email }))[0];
 
       if (candinate) {
         logger.error(`FROM ${req.original} POST ${email} -- user was already exist STATUS 400`);
@@ -115,8 +116,8 @@ router.post(
       }
 
       const { email, password } = req.body;
-
-      const user = (await GetAdapter('User', { email }))[0];// await User.findOne({ email })
+      const usr = new UserAdapter();
+      const user = (await usr.find({ email }))[0];
 
       if (!user) {
         logger.error(`FROM ${req.original} POST ${email} -- user not exist STATUS 400`);
@@ -140,10 +141,10 @@ router.post(
         },
       );
 
-      res.json({ token, userId: user.id });
+      return res.json({ token, userId: user.id });
     } catch (e) {
       logger.error(`FROM ${req.original} POST ${req.body.email} -- ${e} STATUS 500`);
-      res.status(500).json({ message: 'Error' });
+      return res.status(500).json({ message: 'Error' });
     }
   },
 );
